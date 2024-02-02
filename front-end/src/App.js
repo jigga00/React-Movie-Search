@@ -4,10 +4,15 @@ import MoviesList from "./components/MoviesList";
 import MovieDetails from "./components/MovieDetails";
 import MainPage from "./pages/MainPage";
 import NavBar from "./components/NavBar";
+// context
+import { ThemeContext } from "./context/ThemeContext";
+import { UserContext } from "./context/UserContext";
 import "./App.css";
 
 function App() {
   const [movies, setMovies] = useState([]);
+  const [theme, setTheme] = useState("light");
+  const [user, setUser] = useState(null);
 
   // useEffect
   useEffect(() => {
@@ -23,17 +28,32 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <h1>Movies FullStack App</h1>
+    <UserContext.Provider value={{ user, setUser }}>
+      <ThemeContext.Provider value={{ theme, setTheme }}>
+        <div>
 
-      <NavBar />
 
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/movies" element={<MoviesList movies={movies} />} />
-        <Route path='/movies/:id' element={<MovieDetails />}/>
-      </Routes>
-    </div>
+          {user ? (
+            <>
+              <NavBar />
+
+              <Routes>
+                <Route path="/about" element={<h3>About</h3>} />
+                <Route
+                  path="/movies"
+                  element={<MoviesList movies={movies} />}
+                />
+                <Route path="/movies/:id" element={<MovieDetails />} />
+              </Routes>
+            </>
+          ) : (
+            <MainPage />
+          )}
+
+
+        </div>
+      </ThemeContext.Provider>
+    </UserContext.Provider>
   );
 }
 
